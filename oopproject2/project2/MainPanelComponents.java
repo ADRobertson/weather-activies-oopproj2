@@ -8,111 +8,88 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import java.awt.Component;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JCheckBox;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import javax.swing.ImageIcon;
+import javax.swing.Icon;
 
 @SuppressWarnings("unused")
 public class MainPanelComponents extends JPanel{
+	
+	private JList<Object> list;
 	public MainPanelComponents() {
 		setBackground(Color.GRAY);
 		setLayout(null);
 		
+		//Creating Predictor Object
 		Predictor predict = new Predictor("./weather.numeric.txt");
 		
-		JList<Object> list = new JList<Object>(predict.getArrInstances());
+		//Getting List of Instances from Predictor object
+		list = new JList<Object>(predict.getArrInstances());
 		list.setBackground(Color.LIGHT_GRAY);
-		list.setBounds(10, 64, 287, 264);
+		list.setBounds(64, 13, 240, 252);
 		add(list);
 		
+		//MISCELLANEOUS COMPONENTS
+		//----------------------------------------------------
 		JScrollPane scrollBar = new JScrollPane(list);
-		scrollBar.setBounds(10, 28, 289, 254);
+		scrollBar.setBounds(10, 28, 276, 254);
 		add(scrollBar);
-		
-		JLabel lblNewLabel = new JLabel("Weather Instances:");
-		lblNewLabel.setBounds(10, 11, 118, 14);
-		add(lblNewLabel);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.DARK_GRAY);
-		panel.setBounds(10, 293, 763, 10);
-		add(panel);
-		
-		JButton btnNewButton = new JButton("Remove Selected");
-		btnNewButton.setBackground(Color.LIGHT_GRAY);
-		btnNewButton.setBounds(309, 34, 139, 36);
-		add(btnNewButton);
-		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("sunny");
-		rdbtnNewRadioButton.setBackground(Color.LIGHT_GRAY);
-		rdbtnNewRadioButton.setBounds(10, 333, 109, 23);
-		add(rdbtnNewRadioButton);
-		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("overcast");
-		rdbtnNewRadioButton_1.setBackground(Color.LIGHT_GRAY);
-		rdbtnNewRadioButton_1.setBounds(10, 359, 109, 23);
-		add(rdbtnNewRadioButton_1);
-		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("rainy");
-		rdbtnNewRadioButton_2.setBackground(Color.LIGHT_GRAY);
-		rdbtnNewRadioButton_2.setBounds(10, 385, 109, 23);
-		add(rdbtnNewRadioButton_2);
-		
-		JLabel lblNewLabel_1 = new JLabel("Outlook:");
-		lblNewLabel_1.setBounds(10, 314, 60, 14);
-		add(lblNewLabel_1);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(Color.DARK_GRAY);
-		panel_1.setBounds(125, 333, 3, 75);
-		add(panel_1);
-		
-		JSpinner spinner = new JSpinner();
-		spinner.setForeground(Color.LIGHT_GRAY);
-		spinner.setBackground(Color.LIGHT_GRAY);
-		spinner.setBounds(138, 330, 46, 29);
-		add(spinner);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Temp:");
-		lblNewLabel_1_1.setBounds(138, 314, 86, 14);
-		add(lblNewLabel_1_1);
-		
-		JLabel lblNewLabel_1_1_1 = new JLabel("Hum:");
-		lblNewLabel_1_1_1.setBounds(138, 363, 86, 14);
-		add(lblNewLabel_1_1_1);
-		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setForeground(Color.LIGHT_GRAY);
-		spinner_1.setBackground(Color.LIGHT_GRAY);
-		spinner_1.setBounds(138, 382, 46, 29);
-		add(spinner_1);
-		
-		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setBackground(Color.DARK_GRAY);
-		panel_1_1.setBounds(194, 333, 3, 75);
-		add(panel_1_1);
 		
 		JCheckBox chckbxNewCheckBox = new JCheckBox("Windy?");
 		chckbxNewCheckBox.setBackground(Color.LIGHT_GRAY);
 		chckbxNewCheckBox.setBounds(202, 359, 67, 23);
 		add(chckbxNewCheckBox);
 		
-		JPanel panel_1_1_1 = new JPanel();
-		panel_1_1_1.setBackground(Color.DARK_GRAY);
-		panel_1_1_1.setBounds(276, 333, 3, 75);
-		add(panel_1_1_1);
 		
+		//SPINNERS
+		//----------------------------------------------------
+		JSpinner temperatureSpinner = new JSpinner();
+		temperatureSpinner.setForeground(Color.LIGHT_GRAY);
+		temperatureSpinner.setBackground(Color.LIGHT_GRAY);
+		temperatureSpinner.setBounds(138, 330, 46, 29);
+		add(temperatureSpinner);
+		
+		JSpinner humiditySpinner = new JSpinner();
+		humiditySpinner.setForeground(Color.LIGHT_GRAY);
+		humiditySpinner.setBackground(Color.LIGHT_GRAY);
+		humiditySpinner.setBounds(138, 382, 46, 29);
+		add(humiditySpinner);
+		
+		//LABELS
+		//----------------------------------------------------
+		JLabel instanceListLabel = new JLabel("Weather Instances:");
+		instanceListLabel.setBounds(10, 11, 118, 14);
+		add(instanceListLabel);
+		
+		JLabel outlookLabel = new JLabel("Outlook:");
+		outlookLabel.setBounds(10, 314, 60, 14);
+		add(outlookLabel);
+		
+		JLabel temperatureLabel = new JLabel("Temp:");
+		temperatureLabel.setBounds(138, 314, 86, 14);
+		add(temperatureLabel);
+		
+		JLabel humidityLabel = new JLabel("Hum:");
+		humidityLabel.setBounds(138, 363, 86, 14);
+		add(humidityLabel);
+		
+		//BUTTONS AND EVENT HANDLERS
+		//----------------------------------------------------
 		JButton btnSuggestActivity = new JButton("Suggest Activity");
 		btnSuggestActivity.setBackground(Color.LIGHT_GRAY);
-		btnSuggestActivity.setBounds(289, 326, 139, 36);
+		btnSuggestActivity.setBounds(290, 326, 139, 36);
 		add(btnSuggestActivity);
 		
 		JButton btnAddInstance = new JButton("Add Instance");
@@ -120,14 +97,82 @@ public class MainPanelComponents extends JPanel{
 		btnAddInstance.setBounds(289, 378, 139, 36);
 		add(btnAddInstance);
 		
-		JPanel panel_1_1_1_1 = new JPanel();
-		panel_1_1_1_1.setBackground(Color.DARK_GRAY);
-		panel_1_1_1_1.setBounds(289, 369, 140, 3);
-		add(panel_1_1_1_1);
-		
 		JButton btnNewButton_1 = new JButton("Change Activity");
 		btnNewButton_1.setBackground(Color.LIGHT_GRAY);
-		btnNewButton_1.setBounds(309, 81, 139, 36);
+		btnNewButton_1.setBounds(290, 81, 139, 36);
 		add(btnNewButton_1);
+		
+		JButton btnNewButton = new JButton("Remove Selected");
+		btnNewButton.setBackground(Color.LIGHT_GRAY);
+		btnNewButton.setBounds(290, 34, 139, 36);
+		add(btnNewButton);
+		
+		
+		//RADIO BUTTONS FOR SELECTING OUTLOOK
+		//----------------------------------------------------
+		JRadioButton sunnyButton = new JRadioButton();
+		sunnyButton.setBackground(Color.LIGHT_GRAY);
+		sunnyButton.setBounds(10, 333, 109, 23);
+		add(sunnyButton);
+		
+		JRadioButton overcastButton = new JRadioButton("");
+		overcastButton.setBackground(Color.LIGHT_GRAY);
+		overcastButton.setBounds(10, 359, 109, 23);
+		add(overcastButton);
+		
+		JRadioButton rainyButton = new JRadioButton("");
+		rainyButton.setBackground(Color.LIGHT_GRAY);
+		rainyButton.setBounds(10, 385, 109, 23);
+		add(rainyButton);
+		
+		ButtonGroup outlookButtonGroup = new ButtonGroup();
+		outlookButtonGroup.add(sunnyButton);
+		outlookButtonGroup.add(overcastButton);
+		outlookButtonGroup.add(rainyButton);
+		
+		
+		JLabel sunnyLabel = new JLabel(new ImageIcon(MainPanelComponents.class.getResource("/project2/sunny.png")));
+		sunnyLabel.setBounds(31, 333, 88, 23);
+		add(sunnyLabel);
+		
+		JLabel overcastLabel = new JLabel(new ImageIcon(MainPanelComponents.class.getResource("/project2/overcast.png")));
+		overcastLabel.setBounds(31, 359, 88, 23);
+		add(overcastLabel);
+		
+		JLabel rainyLabel = new JLabel(new ImageIcon(MainPanelComponents.class.getResource("/project2/rainy.png")));
+		rainyLabel.setBounds(31, 385, 88, 23);
+		add(rainyLabel);
+		//----------------------------------------------------
+		//DECORATIVE PANELS
+		JPanel decorativePanel_1 = new JPanel();
+		decorativePanel_1.setBackground(Color.DARK_GRAY);
+		decorativePanel_1.setBounds(276, 333, 3, 75);
+		add(decorativePanel_1);
+		
+		JPanel decorativePanel_2 = new JPanel();
+		decorativePanel_2.setBackground(Color.DARK_GRAY);
+		decorativePanel_2.setBounds(289, 369, 140, 3);
+		add(decorativePanel_2);
+		
+		JPanel decorativePanel_3 = new JPanel();
+		decorativePanel_3.setBackground(Color.DARK_GRAY);
+		decorativePanel_3.setBounds(289, 75, 140, 3);
+		add(decorativePanel_3);
+		
+		JPanel decorativePanel_4 = new JPanel();
+		decorativePanel_4.setBackground(Color.DARK_GRAY);
+		decorativePanel_4.setBounds(125, 333, 3, 75);
+		add(decorativePanel_4);
+		
+		JPanel decorativePanel_5 = new JPanel();
+		decorativePanel_5.setBackground(Color.DARK_GRAY);
+		decorativePanel_5.setBounds(194, 333, 3, 75);
+		add(decorativePanel_5);
+		
+		JPanel decorativePanel_6 = new JPanel();
+		decorativePanel_6.setBackground(Color.DARK_GRAY);
+		decorativePanel_6.setBounds(10, 293, 435, 10);
+		add(decorativePanel_6);
+		
 	}
 }

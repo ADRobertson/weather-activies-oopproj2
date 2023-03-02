@@ -132,5 +132,11 @@ public class Predictor {
 		
 		return toReturn2;
 	}
+	
+	public void remove(Instance instance) {
+		if (instances.contains(instance) ) {
+			instances.remove(instance);
+		}
+	}
 }
 

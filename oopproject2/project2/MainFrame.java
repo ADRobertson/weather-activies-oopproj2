@@ -15,10 +15,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class MainFrame {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
+		/* THIS WAS TO CHECK OUT WHAT LOOK AND FEELS WERE INSTALLED, DEBUG
 		for (LookAndFeelInfo lafInfo :UIManager.getInstalledLookAndFeels()) {
 			System.out.println(lafInfo.getClassName());
 		}
-		
+		*/
 		
 		
 		try {
@@ -37,7 +39,7 @@ public class MainFrame {
 		
 		
 		
-		frame.setPreferredSize(new Dimension(800,500));
+		frame.setPreferredSize(new Dimension(470,500));
 		
 		MainPanelComponents panel = new MainPanelComponents();
 		frame.getContentPane().add(panel);
