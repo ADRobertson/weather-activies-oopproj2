@@ -39,7 +39,7 @@ public class MainFrame {
 		
 		
 		
-		frame.setPreferredSize(new Dimension(470,500));
+		frame.setPreferredSize(new Dimension(465,470));
 		
 		MainPanelComponents panel = new MainPanelComponents();
 		frame.getContentPane().add(panel);

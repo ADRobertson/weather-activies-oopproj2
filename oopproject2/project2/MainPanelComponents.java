@@ -8,51 +8,87 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 
 import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
+
 import java.awt.Component;
+
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import javax.swing.ImageIcon;
 import javax.swing.Icon;
+import javax.swing.JPopupMenu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings("unused")
 public class MainPanelComponents extends JPanel{
-	
+	BufferedImage image = null;
+	ImageIcon imagetest = null;
 	private JList<Object> list;
+	private Predictor predict;
+	private JFrame parentFrame;
+	public Object[] refreshList(Predictor predict) {
+		return predict.getArrInstances();
+	}
 	public MainPanelComponents() {
-		setBackground(Color.GRAY);
+		//setBackground(Color.GRAY);
+		try {
+			image = ImageIO.read(new File("./ui.jpg"));
+		} catch (IOException e) {
+			System.out.println("Failed to load image");
+		}
+
+		imagetest = new ImageIcon(MainPanelComponents.class.getResource("/project2/ui.jpg"));
+
 		setLayout(null);
-		
+		parentFrame = (JFrame)SwingUtilities.getWindowAncestor(this);
+
 		//Creating Predictor Object
-		Predictor predict = new Predictor("./weather.numeric.txt");
-		
+		predict = new Predictor("./weather.numeric.txt");
+
 		//Getting List of Instances from Predictor object
-		list = new JList<Object>(predict.getArrInstances());
+		list = new JList<Object>(refreshList(predict));
 		list.setBackground(Color.LIGHT_GRAY);
 		list.setBounds(64, 13, 240, 252);
 		add(list);
-		
+
 		//MISCELLANEOUS COMPONENTS
 		//----------------------------------------------------
 		JScrollPane scrollBar = new JScrollPane(list);
 		scrollBar.setBounds(10, 28, 276, 254);
 		add(scrollBar);
-		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Windy?");
-		chckbxNewCheckBox.setBackground(Color.LIGHT_GRAY);
-		chckbxNewCheckBox.setBounds(202, 359, 67, 23);
-		add(chckbxNewCheckBox);
-		
-		
+
+		JCheckBox windyCheckBox = new JCheckBox("Windy?");
+		windyCheckBox.setForeground(Color.LIGHT_GRAY);
+		windyCheckBox.setBackground(Color.LIGHT_GRAY);
+		windyCheckBox.setBounds(202, 359, 67, 23);
+		add(windyCheckBox);
+
+
 		//SPINNERS
 		//----------------------------------------------------
 		JSpinner temperatureSpinner = new JSpinner();
@@ -60,119 +96,291 @@ public class MainPanelComponents extends JPanel{
 		temperatureSpinner.setBackground(Color.LIGHT_GRAY);
 		temperatureSpinner.setBounds(138, 330, 46, 29);
 		add(temperatureSpinner);
-		
+
 		JSpinner humiditySpinner = new JSpinner();
 		humiditySpinner.setForeground(Color.LIGHT_GRAY);
 		humiditySpinner.setBackground(Color.LIGHT_GRAY);
 		humiditySpinner.setBounds(138, 382, 46, 29);
 		add(humiditySpinner);
-		
+
 		//LABELS
 		//----------------------------------------------------
 		JLabel instanceListLabel = new JLabel("Weather Instances:");
+		instanceListLabel.setForeground(Color.LIGHT_GRAY);
 		instanceListLabel.setBounds(10, 11, 118, 14);
 		add(instanceListLabel);
-		
+
 		JLabel outlookLabel = new JLabel("Outlook:");
+		outlookLabel.setForeground(Color.LIGHT_GRAY);
 		outlookLabel.setBounds(10, 314, 60, 14);
 		add(outlookLabel);
-		
+
 		JLabel temperatureLabel = new JLabel("Temp:");
+		temperatureLabel.setForeground(Color.LIGHT_GRAY);
 		temperatureLabel.setBounds(138, 314, 86, 14);
 		add(temperatureLabel);
-		
+
 		JLabel humidityLabel = new JLabel("Hum:");
+		humidityLabel.setForeground(Color.LIGHT_GRAY);
 		humidityLabel.setBounds(138, 363, 86, 14);
 		add(humidityLabel);
-		
-		//BUTTONS AND EVENT HANDLERS
-		//----------------------------------------------------
-		JButton btnSuggestActivity = new JButton("Suggest Activity");
-		btnSuggestActivity.setBackground(Color.LIGHT_GRAY);
-		btnSuggestActivity.setBounds(290, 326, 139, 36);
-		add(btnSuggestActivity);
-		
-		JButton btnAddInstance = new JButton("Add Instance");
-		btnAddInstance.setBackground(Color.LIGHT_GRAY);
-		btnAddInstance.setBounds(289, 378, 139, 36);
-		add(btnAddInstance);
-		
-		JButton btnNewButton_1 = new JButton("Change Activity");
-		btnNewButton_1.setBackground(Color.LIGHT_GRAY);
-		btnNewButton_1.setBounds(290, 81, 139, 36);
-		add(btnNewButton_1);
-		
-		JButton btnNewButton = new JButton("Remove Selected");
-		btnNewButton.setBackground(Color.LIGHT_GRAY);
-		btnNewButton.setBounds(290, 34, 139, 36);
-		add(btnNewButton);
-		
-		
+
+		JLabel lblNewLabel = new JLabel("<html>Select an Instance from the list on the left, use the above buttons to manipulate the selected value. Otherwise, use the bottom buttons to get an activity suggestion or to add a new instance to the list! </html>");
+		lblNewLabel.setForeground(Color.LIGHT_GRAY);
+		lblNewLabel.setBounds(296, 128, 139, 139);
+		add(lblNewLabel);
+
+
+
 		//RADIO BUTTONS FOR SELECTING OUTLOOK
 		//----------------------------------------------------
 		JRadioButton sunnyButton = new JRadioButton();
 		sunnyButton.setBackground(Color.LIGHT_GRAY);
 		sunnyButton.setBounds(10, 333, 109, 23);
 		add(sunnyButton);
-		
+
 		JRadioButton overcastButton = new JRadioButton("");
 		overcastButton.setBackground(Color.LIGHT_GRAY);
 		overcastButton.setBounds(10, 359, 109, 23);
 		add(overcastButton);
-		
+
 		JRadioButton rainyButton = new JRadioButton("");
 		rainyButton.setBackground(Color.LIGHT_GRAY);
 		rainyButton.setBounds(10, 385, 109, 23);
 		add(rainyButton);
-		
+
 		ButtonGroup outlookButtonGroup = new ButtonGroup();
 		outlookButtonGroup.add(sunnyButton);
 		outlookButtonGroup.add(overcastButton);
 		outlookButtonGroup.add(rainyButton);
-		
-		
+
+
 		JLabel sunnyLabel = new JLabel(new ImageIcon(MainPanelComponents.class.getResource("/project2/sunny.png")));
 		sunnyLabel.setBounds(31, 333, 88, 23);
 		add(sunnyLabel);
-		
+
 		JLabel overcastLabel = new JLabel(new ImageIcon(MainPanelComponents.class.getResource("/project2/overcast.png")));
 		overcastLabel.setBounds(31, 359, 88, 23);
 		add(overcastLabel);
-		
+
 		JLabel rainyLabel = new JLabel(new ImageIcon(MainPanelComponents.class.getResource("/project2/rainy.png")));
 		rainyLabel.setBounds(31, 385, 88, 23);
 		add(rainyLabel);
+
+
 		//----------------------------------------------------
-		//DECORATIVE PANELS
+		//DECORATIVE PANELS (Just used to add visual dividers between buttons, sections, etc. Not actually planning on adding any additional
+		//functionality to these...
 		JPanel decorativePanel_1 = new JPanel();
 		decorativePanel_1.setBackground(Color.DARK_GRAY);
 		decorativePanel_1.setBounds(276, 333, 3, 75);
-		add(decorativePanel_1);
-		
+		//add(decorativePanel_1);
+
 		JPanel decorativePanel_2 = new JPanel();
 		decorativePanel_2.setBackground(Color.DARK_GRAY);
 		decorativePanel_2.setBounds(289, 369, 140, 3);
-		add(decorativePanel_2);
-		
+		//add(decorativePanel_2);
+
 		JPanel decorativePanel_3 = new JPanel();
 		decorativePanel_3.setBackground(Color.DARK_GRAY);
 		decorativePanel_3.setBounds(289, 75, 140, 3);
-		add(decorativePanel_3);
-		
+		//add(decorativePanel_3);
+
 		JPanel decorativePanel_4 = new JPanel();
 		decorativePanel_4.setBackground(Color.DARK_GRAY);
 		decorativePanel_4.setBounds(125, 333, 3, 75);
-		add(decorativePanel_4);
-		
+		//add(decorativePanel_4);
+
 		JPanel decorativePanel_5 = new JPanel();
 		decorativePanel_5.setBackground(Color.DARK_GRAY);
 		decorativePanel_5.setBounds(194, 333, 3, 75);
-		add(decorativePanel_5);
-		
+		//add(decorativePanel_5);
+
 		JPanel decorativePanel_6 = new JPanel();
 		decorativePanel_6.setBackground(Color.DARK_GRAY);
 		decorativePanel_6.setBounds(10, 293, 435, 10);
-		add(decorativePanel_6);
-		
+		//add(decorativePanel_6);
+
+		JFrame activityFrame = new JFrame("Select Activity");
+
+
+		//BUTTONS AND EVENT HANDLERS
+		//----------------------------------------------------
+		JButton btnSuggestActivity = new JButton("Suggest Activity");
+		btnSuggestActivity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//implementing default values in case things aren't selected in the input menus
+				int temperature = 50;
+				int humidity = 50;
+				String windy = "FALSE";
+				String activity = "sleep";
+				String outlook = "sunny";
+
+				//GETTING VALUE FROM RADIO BUTTONS
+				//---------------------------------
+				if (sunnyButton.isSelected()) {
+					outlook = "sunny";
+				}
+				else if (overcastButton.isSelected()) {
+					outlook = "overcast";
+				}
+				else if (rainyButton.isSelected()) {
+					outlook = "rainy";
+				}
+
+				//GETTING SPINNER VALUES
+				//---------------------------------
+				temperature = (int)temperatureSpinner.getValue();
+				humidity = (int)humiditySpinner.getValue();
+				
+				//GETTING WINDY VALUE
+				//---------------------------------
+				if (windyCheckBox.isSelected()) {
+					windy = "TRUE";
+				}
+				Instance suggestorInstance = new Instance(outlook, temperature, humidity, windy);
+				String activityToDo = predict.using(suggestorInstance);
+				suggestorInstance.setActivity(activityToDo);
+				//System.out.println(activityToDo);
+				
+				JDialog suggestionDialog = new JDialog(parentFrame, "Activity Suggestion");
+				JLabel suggestionLabel = new JLabel("<html>Given Today's weather: " + suggestorInstance +"</html>");
+				
+				JButton addInstanceButton = new JButton("Add As Instance");
+				addInstanceButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						//updates the instance in predict
+						predict.updating(suggestorInstance);
+						//refreshes the data in the JList object
+						list.setListData(refreshList(predict));
+						//closes the activityDialog window
+					}
+				});
+				addInstanceButton.setBackground(Color.LIGHT_GRAY);
+				addInstanceButton.setBounds(50, 200, 1, 1);
+				
+				suggestionDialog.setSize(150,250);
+				suggestionDialog.add(suggestionLabel);
+				suggestionDialog.add(addInstanceButton);
+				suggestionDialog.setLocationRelativeTo(btnSuggestActivity);
+				suggestionDialog.setModal(true);
+				suggestionDialog.setVisible(true);
+			}
+		});
+		btnSuggestActivity.setBackground(Color.LIGHT_GRAY);
+		btnSuggestActivity.setBounds(290, 326, 139, 36);
+		add(btnSuggestActivity);
+
+		JButton addInstanceButton = new JButton("Add Instance");
+		addInstanceButton.setBackground(Color.LIGHT_GRAY);
+		addInstanceButton.setBounds(289, 378, 139, 36);
+		add(addInstanceButton);
+
+		JButton changeActivityButton = new JButton("Change Activity");
+		changeActivityButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//gets selected object
+				Object object = list.getSelectedValue();
+				//converts selected object to instance
+				Instance instanceToUpdate = (Instance)object;
+				//calls updating and passes selected object
+				JDialog activityDialog = new JDialog(parentFrame,"Select Activity");
+
+				//JLabel label = new JLabel("TESTINGTESTING");
+				//activityDialog.add(label);
+				String[] activities = predict.getActivities();
+
+
+
+				JLabel activityDialogLabel = new JLabel("<html>Select an activity! (OR Enter a new activity!)</html>");
+				activityDialogLabel.setBounds(10,5,100,100);
+
+				JComboBox<String> activityComboBox = new JComboBox<String>();
+				activityComboBox.setSize(new Dimension(100,50));
+				activityDialog.setBackground(Color.DARK_GRAY);
+				activityDialog.getContentPane().setLayout(null);
+				activityDialog.setSize(150,250);
+
+				for (String activity : activities) {
+					activityComboBox.addItem(activity);
+				}
+				activityComboBox.setBounds(10,85,100,25);
+
+				activityComboBox.setBackground(Color.LIGHT_GRAY);
+
+
+				JTextField activityTextField = new JTextField();
+				activityTextField.setBounds(10, 110, 100, 25);
+
+				JPanel decorativeActivityPanel = new JPanel();
+				decorativeActivityPanel.setBackground(Color.DARK_GRAY);
+				decorativeActivityPanel.setBounds(10, 135, 100, 3);
+
+
+
+				JButton updateInstanceButton = new JButton("Update Instance");
+				updateInstanceButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						String activityToUpdate = null;
+
+						//if there is input in the text field, update activity with that value
+						if (activityTextField.getText().equals("")) {
+							activityToUpdate = (String)activityComboBox.getSelectedItem();
+						}
+						else {
+							//else use the combobox selection
+							activityToUpdate = activityTextField.getText();
+						}
+
+						//changes activity on instance selected from Jlist
+						instanceToUpdate.setActivity(activityToUpdate);
+						//updates the instance in predict
+						predict.updating(instanceToUpdate);
+						//refreshes the data in the JList object
+						list.setListData(refreshList(predict));
+						//closes the activityDialog window
+						activityDialog.dispose();
+					}
+				});
+				updateInstanceButton.setBounds(10,140,100,25);
+				updateInstanceButton.setBackground(Color.LIGHT_GRAY);
+
+				activityDialog.getContentPane().add(activityDialogLabel);
+				activityDialog.getContentPane().add(activityComboBox);
+				activityDialog.getContentPane().add(decorativeActivityPanel);
+				activityDialog.getContentPane().add(activityTextField);
+				activityDialog.getContentPane().add(updateInstanceButton);
+				activityDialog.setLocationRelativeTo(changeActivityButton);
+				activityDialog.setModal(true);
+				activityDialog.setVisible(true);
+
+
+			}
+		});
+		changeActivityButton.setBackground(Color.LIGHT_GRAY);
+		changeActivityButton.setBounds(290, 81, 139, 36);
+		add(changeActivityButton);
+
+		JButton removeButton = new JButton("Remove Selected");
+		removeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//gets selected object
+				Object instanceToRemove = list.getSelectedValue();
+				// removes selected object
+				predict.remove((Instance)instanceToRemove);
+				// refreshes Jlist with new array of instances (with selected element removed)
+				list.setListData(refreshList(predict));
+			}
+		});
+		removeButton.setBackground(Color.LIGHT_GRAY);
+		removeButton.setBounds(290, 34, 139, 36);
+		add(removeButton);
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(imagetest.getImage(), 0, 0, this);
 	}
 }
+
