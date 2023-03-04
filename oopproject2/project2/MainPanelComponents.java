@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -232,7 +233,7 @@ public class MainPanelComponents extends JPanel{
 				//---------------------------------
 				temperature = (int)temperatureSpinner.getValue();
 				humidity = (int)humiditySpinner.getValue();
-				
+
 				//GETTING WINDY VALUE
 				//---------------------------------
 				if (windyCheckBox.isSelected()) {
@@ -242,10 +243,11 @@ public class MainPanelComponents extends JPanel{
 				String activityToDo = predict.using(suggestorInstance);
 				suggestorInstance.setActivity(activityToDo);
 				//System.out.println(activityToDo);
-				
+
 				JDialog suggestionDialog = new JDialog(parentFrame, "Activity Suggestion");
+				suggestionDialog.getContentPane().setLayout(null);
 				JLabel suggestionLabel = new JLabel("<html>Given Today's weather: " + suggestorInstance +"</html>");
-				
+
 				JButton addInstanceButton = new JButton("Add As Instance");
 				addInstanceButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -254,14 +256,16 @@ public class MainPanelComponents extends JPanel{
 						//refreshes the data in the JList object
 						list.setListData(refreshList(predict));
 						//closes the activityDialog window
+						suggestionDialog.dispose();
 					}
 				});
+				suggestionLabel.setBounds(30,10, 200,100);
 				addInstanceButton.setBackground(Color.LIGHT_GRAY);
-				addInstanceButton.setBounds(50, 200, 1, 1);
-				
-				suggestionDialog.setSize(150,250);
-				suggestionDialog.add(suggestionLabel);
-				suggestionDialog.add(addInstanceButton);
+				addInstanceButton.setBounds(10, 100, 180, 25);
+
+				suggestionDialog.setSize(220,200);
+				suggestionDialog.getContentPane().add(suggestionLabel);
+				suggestionDialog.getContentPane().add(addInstanceButton);
 				suggestionDialog.setLocationRelativeTo(btnSuggestActivity);
 				suggestionDialog.setModal(true);
 				suggestionDialog.setVisible(true);
@@ -272,18 +276,37 @@ public class MainPanelComponents extends JPanel{
 		add(btnSuggestActivity);
 
 		JButton addInstanceButton = new JButton("Add Instance");
-		addInstanceButton.setBackground(Color.LIGHT_GRAY);
-		addInstanceButton.setBounds(289, 378, 139, 36);
-		add(addInstanceButton);
-
-		JButton changeActivityButton = new JButton("Change Activity");
-		changeActivityButton.addActionListener(new ActionListener() {
+		addInstanceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//gets selected object
-				Object object = list.getSelectedValue();
-				//converts selected object to instance
-				Instance instanceToUpdate = (Instance)object;
-				//calls updating and passes selected object
+				//implementing default values in case things aren't selected in the input menus
+				int temperature = 50;
+				int humidity = 50;
+				String windy = "FALSE";
+				String activity = "sleep";
+				String outlook = "sunny";
+
+				//GETTING VALUE FROM RADIO BUTTONS
+				//---------------------------------
+				if (sunnyButton.isSelected()) {
+					outlook = "sunny";
+				}
+				else if (overcastButton.isSelected()) {
+					outlook = "overcast";
+				}
+				else if (rainyButton.isSelected()) {
+					outlook = "rainy";
+				}
+
+				//GETTING SPINNER VALUES
+				//---------------------------------
+				temperature = (int)temperatureSpinner.getValue();
+				humidity = (int)humiditySpinner.getValue();
+
+				//GETTING WINDY VALUE
+				//---------------------------------
+				if (windyCheckBox.isSelected()) {
+					windy = "TRUE";
+				}
 				JDialog activityDialog = new JDialog(parentFrame,"Select Activity");
 
 				//JLabel label = new JLabel("TESTINGTESTING");
@@ -293,66 +316,143 @@ public class MainPanelComponents extends JPanel{
 
 
 				JLabel activityDialogLabel = new JLabel("<html>Select an activity! (OR Enter a new activity!)</html>");
-				activityDialogLabel.setBounds(10,5,100,100);
+				activityDialogLabel.setBounds(10,5,150,100);
 
 				JComboBox<String> activityComboBox = new JComboBox<String>();
 				activityComboBox.setSize(new Dimension(100,50));
 				activityDialog.setBackground(Color.DARK_GRAY);
 				activityDialog.getContentPane().setLayout(null);
-				activityDialog.setSize(150,250);
+				activityDialog.setSize(200,250);
 
-				for (String activity : activities) {
-					activityComboBox.addItem(activity);
+				for (String activityList : activities) {
+					activityComboBox.addItem(activityList);
 				}
-				activityComboBox.setBounds(10,85,100,25);
+				activityComboBox.setBounds(10,85,150,25);
 
 				activityComboBox.setBackground(Color.LIGHT_GRAY);
 
 
 				JTextField activityTextField = new JTextField();
-				activityTextField.setBounds(10, 110, 100, 25);
-
-				JPanel decorativeActivityPanel = new JPanel();
-				decorativeActivityPanel.setBackground(Color.DARK_GRAY);
-				decorativeActivityPanel.setBounds(10, 135, 100, 3);
-
-
-
-				JButton updateInstanceButton = new JButton("Update Instance");
-				updateInstanceButton.addActionListener(new ActionListener() {
+				activityTextField.setBounds(10, 110, 150, 25);
+				
+				Instance newInstance = new Instance(outlook, temperature, humidity, windy);
+				
+				JButton dialogAddInstanceButton = new JButton("Add As Instance");
+				addInstanceButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						String activityToUpdate = null;
-
-						//if there is input in the text field, update activity with that value
-						if (activityTextField.getText().equals("")) {
-							activityToUpdate = (String)activityComboBox.getSelectedItem();
-						}
-						else {
-							//else use the combobox selection
-							activityToUpdate = activityTextField.getText();
-						}
-
-						//changes activity on instance selected from Jlist
-						instanceToUpdate.setActivity(activityToUpdate);
 						//updates the instance in predict
-						predict.updating(instanceToUpdate);
+						predict.updating(newInstance);
 						//refreshes the data in the JList object
 						list.setListData(refreshList(predict));
 						//closes the activityDialog window
 						activityDialog.dispose();
 					}
 				});
-				updateInstanceButton.setBounds(10,140,100,25);
-				updateInstanceButton.setBackground(Color.LIGHT_GRAY);
+				
+				dialogAddInstanceButton.setBounds(10,140,150,25);
+				dialogAddInstanceButton.setBackground(Color.LIGHT_GRAY);
 
 				activityDialog.getContentPane().add(activityDialogLabel);
 				activityDialog.getContentPane().add(activityComboBox);
-				activityDialog.getContentPane().add(decorativeActivityPanel);
+				//activityDialog.getContentPane().add(decorativeActivityPanel);
 				activityDialog.getContentPane().add(activityTextField);
-				activityDialog.getContentPane().add(updateInstanceButton);
-				activityDialog.setLocationRelativeTo(changeActivityButton);
+				activityDialog.getContentPane().add(dialogAddInstanceButton);
+				activityDialog.setLocationRelativeTo(addInstanceButton);
 				activityDialog.setModal(true);
 				activityDialog.setVisible(true);
+
+			}
+		});
+		addInstanceButton.setBackground(Color.LIGHT_GRAY);
+		addInstanceButton.setBounds(289, 378, 139, 36);
+		add(addInstanceButton);
+
+		JButton changeActivityButton = new JButton("Change Activity");
+		changeActivityButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!list.isSelectionEmpty()) {
+					//gets selected object
+					Object object = list.getSelectedValue();
+					//converts selected object to instance
+					Instance instanceToUpdate = (Instance)object;
+					//calls updating and passes selected object
+					JDialog activityDialog = new JDialog(parentFrame,"Select Activity");
+	
+					//JLabel label = new JLabel("TESTINGTESTING");
+					//activityDialog.add(label);
+					String[] activities = predict.getActivities();
+	
+	
+	
+					JLabel activityDialogLabel = new JLabel("<html>Select an activity! (OR Enter a new activity!)</html>");
+					activityDialogLabel.setBounds(10,5,150,100);
+	
+					JComboBox<String> activityComboBox = new JComboBox<String>();
+					activityComboBox.setSize(new Dimension(100,50));
+					activityDialog.setBackground(Color.DARK_GRAY);
+					activityDialog.getContentPane().setLayout(null);
+					activityDialog.setSize(200,250);
+	
+					for (String activity : activities) {
+						activityComboBox.addItem(activity);
+					}
+					activityComboBox.setBounds(10,85,150,25);
+	
+					activityComboBox.setBackground(Color.LIGHT_GRAY);
+	
+	
+					JTextField activityTextField = new JTextField();
+					activityTextField.setBounds(10, 110, 150, 25);
+	
+					JPanel decorativeActivityPanel = new JPanel();
+					decorativeActivityPanel.setBackground(Color.DARK_GRAY);
+					decorativeActivityPanel.setBounds(10, 135, 100, 3);
+	
+	
+	
+					JButton updateInstanceButton = new JButton("Update Instance");
+					updateInstanceButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String activityToUpdate = null;
+							
+							//if there is input in the text field, update activity with that value
+							if (activityTextField.getText().equals("")) {
+								activityToUpdate = (String)activityComboBox.getSelectedItem();
+							}
+							else {
+								//else use the combobox selection
+								activityToUpdate = activityTextField.getText();
+							}
+	
+							//changes activity on instance selected from Jlist
+							instanceToUpdate.setActivity(activityToUpdate);
+							//updates the instance in predict
+							predict.updating(instanceToUpdate);
+							//refreshes the data in the JList object
+							list.setListData(refreshList(predict));
+							//closes the activityDialog window
+							activityDialog.dispose();
+						}
+					});
+					updateInstanceButton.setBounds(10,140,150,25);
+					updateInstanceButton.setBackground(Color.LIGHT_GRAY);
+	
+					activityDialog.getContentPane().add(activityDialogLabel);
+					activityDialog.getContentPane().add(activityComboBox);
+					//activityDialog.getContentPane().add(decorativeActivityPanel);
+					activityDialog.getContentPane().add(activityTextField);
+					activityDialog.getContentPane().add(updateInstanceButton);
+					activityDialog.setLocationRelativeTo(changeActivityButton);
+					activityDialog.setModal(true);
+					activityDialog.setVisible(true);
+				}
+				else {
+					//JOptionPane.showMessageDialog(parentFrame, "Please Select an Instance from the list before trying to change an activity!");
+					JOptionPane pane = new JOptionPane("<HTML>Select an Instance from the list before trying to change activity!</html>");
+					JDialog d = pane.createDialog((JFrame)null, "*ERROR*");
+					d.setLocationRelativeTo(changeActivityButton);
+					d.setVisible(true);
+				}
 
 
 			}
