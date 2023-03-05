@@ -1,7 +1,6 @@
 sunny,85,85,FALSE,swimming
-sunny,80,90,TRUE,fly kite
 overcast,83,86,FALSE,tennis
-rainy,70,96,FALSE,xbox
+rainy,70,96,FALSE,sleeping in
 rainy,68,80,FALSE,xbox
 rainy,65,70,TRUE,xbox
 overcast,64,65,TRUE,tennis

@@ -65,6 +65,7 @@ public class MainPanelComponents extends JPanel{
 
 		imagetest = new ImageIcon(MainPanelComponents.class.getResource("/project2/ui.jpg"));
 
+		
 		setLayout(null);
 		parentFrame = (JFrame)SwingUtilities.getWindowAncestor(this);
 
@@ -245,6 +246,7 @@ public class MainPanelComponents extends JPanel{
 				//System.out.println(activityToDo);
 
 				JDialog suggestionDialog = new JDialog(parentFrame, "Activity Suggestion");
+
 				suggestionDialog.getContentPane().setLayout(null);
 				JLabel suggestionLabel = new JLabel("<html>Given Today's weather: " + suggestorInstance +"</html>");
 
@@ -307,7 +309,12 @@ public class MainPanelComponents extends JPanel{
 				if (windyCheckBox.isSelected()) {
 					windy = "TRUE";
 				}
-				JDialog activityDialog = new JDialog(parentFrame,"Select Activity");
+				JDialog activityDialog = new JDialog(parentFrame,"Select Activity") {
+					public void paintComponents(Graphics g) {
+						super.paintComponents(g);
+						g.drawImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("project2/dialogUI.jpg")), 0, 0, null);
+				}	
+				};
 
 				//JLabel label = new JLabel("TESTINGTESTING");
 				//activityDialog.add(label);
@@ -334,9 +341,9 @@ public class MainPanelComponents extends JPanel{
 
 				JTextField activityTextField = new JTextField();
 				activityTextField.setBounds(10, 110, 150, 25);
-				
+
 				Instance newInstance = new Instance(outlook, temperature, humidity, windy);
-				
+
 				JButton dialogAddInstanceButton = new JButton("Add As Instance");
 				addInstanceButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -348,7 +355,7 @@ public class MainPanelComponents extends JPanel{
 						activityDialog.dispose();
 					}
 				});
-				
+
 				dialogAddInstanceButton.setBounds(10,140,150,25);
 				dialogAddInstanceButton.setBackground(Color.LIGHT_GRAY);
 
@@ -377,44 +384,44 @@ public class MainPanelComponents extends JPanel{
 					Instance instanceToUpdate = (Instance)object;
 					//calls updating and passes selected object
 					JDialog activityDialog = new JDialog(parentFrame,"Select Activity");
-	
+
 					//JLabel label = new JLabel("TESTINGTESTING");
 					//activityDialog.add(label);
 					String[] activities = predict.getActivities();
-	
-	
-	
+
+
+
 					JLabel activityDialogLabel = new JLabel("<html>Select an activity! (OR Enter a new activity!)</html>");
 					activityDialogLabel.setBounds(10,5,150,100);
-	
+
 					JComboBox<String> activityComboBox = new JComboBox<String>();
 					activityComboBox.setSize(new Dimension(100,50));
 					activityDialog.setBackground(Color.DARK_GRAY);
 					activityDialog.getContentPane().setLayout(null);
 					activityDialog.setSize(200,250);
-	
+
 					for (String activity : activities) {
 						activityComboBox.addItem(activity);
 					}
 					activityComboBox.setBounds(10,85,150,25);
-	
+
 					activityComboBox.setBackground(Color.LIGHT_GRAY);
-	
-	
+
+
 					JTextField activityTextField = new JTextField();
 					activityTextField.setBounds(10, 110, 150, 25);
-	
+
 					JPanel decorativeActivityPanel = new JPanel();
 					decorativeActivityPanel.setBackground(Color.DARK_GRAY);
 					decorativeActivityPanel.setBounds(10, 135, 100, 3);
-	
-	
-	
+
+
+
 					JButton updateInstanceButton = new JButton("Update Instance");
 					updateInstanceButton.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							String activityToUpdate = null;
-							
+
 							//if there is input in the text field, update activity with that value
 							if (activityTextField.getText().equals("")) {
 								activityToUpdate = (String)activityComboBox.getSelectedItem();
@@ -423,7 +430,7 @@ public class MainPanelComponents extends JPanel{
 								//else use the combobox selection
 								activityToUpdate = activityTextField.getText();
 							}
-	
+
 							//changes activity on instance selected from Jlist
 							instanceToUpdate.setActivity(activityToUpdate);
 							//updates the instance in predict
@@ -436,7 +443,7 @@ public class MainPanelComponents extends JPanel{
 					});
 					updateInstanceButton.setBounds(10,140,150,25);
 					updateInstanceButton.setBackground(Color.LIGHT_GRAY);
-	
+
 					activityDialog.getContentPane().add(activityDialogLabel);
 					activityDialog.getContentPane().add(activityComboBox);
 					//activityDialog.getContentPane().add(decorativeActivityPanel);
@@ -481,6 +488,10 @@ public class MainPanelComponents extends JPanel{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(imagetest.getImage(), 0, 0, this);
+	}
+
+	public void doClose() {
+		predict.saveFile();
 	}
 }
 

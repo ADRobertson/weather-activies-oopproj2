@@ -3,6 +3,8 @@ package project2;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -46,6 +48,12 @@ public class MainFrame {
 		
 		frame.pack();
 		frame.setVisible(true);
+		
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				panel.doClose();
+			}
+		});
 
 	}
 
