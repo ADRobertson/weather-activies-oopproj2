@@ -56,17 +56,8 @@ public class MainPanelComponents extends JPanel{
 		return predict.getArrInstances();
 	}
 	public MainPanelComponents() {
-		//setBackground(Color.GRAY);
-		try {
-			image = ImageIO.read(new File("./ui.jpg"));
-		} catch (IOException e) {
-			System.out.println("Failed to load image");
-		}
-
-		imagetest = new ImageIcon(MainPanelComponents.class.getResource("/project2/ui.jpg"));
-
-		
 		setLayout(null);
+		imagetest = new ImageIcon(MainPanelComponents.class.getResource("/project2/ui.jpg"));
 		parentFrame = (JFrame)SwingUtilities.getWindowAncestor(this);
 
 		//Creating Predictor Object
@@ -471,12 +462,20 @@ public class MainPanelComponents extends JPanel{
 		JButton removeButton = new JButton("Remove Selected");
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!list.isSelectionEmpty()) {
 				//gets selected object
 				Object instanceToRemove = list.getSelectedValue();
 				// removes selected object
 				predict.remove((Instance)instanceToRemove);
-				// refreshes Jlist with new array of instances (with selected element removed)
+				// refreshes JList with new array of instances (with selected element removed)
 				list.setListData(refreshList(predict));
+				}
+				else {
+					JOptionPane pane = new JOptionPane("<HTML>Select an Instance from the list before trying to remove!</html>");
+					JDialog d = pane.createDialog((JFrame)null, "*ERROR*");
+					d.setLocationRelativeTo(changeActivityButton);
+					d.setVisible(true);
+				}
 			}
 		});
 		removeButton.setBackground(Color.LIGHT_GRAY);

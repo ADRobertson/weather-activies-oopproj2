@@ -48,6 +48,7 @@ public class MainFrame {
 		
 		frame.pack();
 		frame.setVisible(true);
+		frame.setResizable(false);
 		
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
