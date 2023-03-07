@@ -268,12 +268,7 @@ public class MainPanelComponents extends JPanel{
 				if (windyCheckBox.isSelected()) {
 					windy = "TRUE";
 				}
-				JDialog activityDialog = new JDialog(parentFrame,"Select Activity") {
-					public void paintComponents(Graphics g) {
-						super.paintComponents(g);
-						g.drawImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("project2/dialogUI.jpg")), 0, 0, null);
-				}	
-				};
+				JDialog activityDialog = new JDialog(parentFrame,"Select Activity");
 
 				//JLabel label = new JLabel("TESTINGTESTING");
 				//activityDialog.add(label);
@@ -284,28 +279,41 @@ public class MainPanelComponents extends JPanel{
 				JLabel activityDialogLabel = new JLabel("<html>Select an activity! (OR Enter a new activity!)</html>");
 				activityDialogLabel.setBounds(10,5,150,100);
 
-				JComboBox<String> activityComboBox = new JComboBox<String>();
-				activityComboBox.setSize(new Dimension(100,50));
+				JComboBox<String> activityDialogComboBox = new JComboBox<String>();
+				activityDialogComboBox.setSize(new Dimension(100,50));
 				activityDialog.setBackground(Color.DARK_GRAY);
 				activityDialog.getContentPane().setLayout(null);
 				activityDialog.setSize(200,250);
-
+				activities = predict.getActivities();
+				
 				for (String activityList : activities) {
-					activityComboBox.addItem(activityList);
+					activityDialogComboBox.addItem(activityList);
 				}
-				activityComboBox.setBounds(10,85,150,25);
+				activityDialogComboBox.setBounds(10,85,150,25);
 
-				activityComboBox.setBackground(Color.LIGHT_GRAY);
+				activityDialogComboBox.setBackground(Color.LIGHT_GRAY);
 
 
 				JTextField activityTextField = new JTextField();
 				activityTextField.setBounds(10, 110, 150, 25);
 
+				String activityToAdd = "";
+				
 				Instance newInstance = new Instance(outlook, temperature, humidity, windy);
 
 				JButton dialogAddInstanceButton = new JButton("Add As Instance");
-				addInstanceButton.addActionListener(new ActionListener() {
+				dialogAddInstanceButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						String tempActivity = "";
+						//if there is input in the text field, update activity with that value
+						if (activityTextField.getText().equals("")) {
+							 tempActivity = (String)activityDialogComboBox.getSelectedItem();
+						}
+						else {
+							//else use the combobox selection
+							tempActivity = activityTextField.getText();
+						}
+						newInstance.setActivity(tempActivity);
 						//updates the instance in predict
 						predict.updating(newInstance);
 						//refreshes the data in the JList object
@@ -314,12 +322,14 @@ public class MainPanelComponents extends JPanel{
 						activityDialog.dispose();
 					}
 				});
+				
+				
 
 				dialogAddInstanceButton.setBounds(10,140,150,25);
 				dialogAddInstanceButton.setBackground(Color.LIGHT_GRAY);
 
 				activityDialog.getContentPane().add(activityDialogLabel);
-				activityDialog.getContentPane().add(activityComboBox);
+				activityDialog.getContentPane().add(activityDialogComboBox);
 				//activityDialog.getContentPane().add(decorativeActivityPanel);
 				activityDialog.getContentPane().add(activityTextField);
 				activityDialog.getContentPane().add(dialogAddInstanceButton);
