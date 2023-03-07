@@ -1,7 +1,5 @@
 rainy,68,80,FALSE,xbox
 overcast,64,65,TRUE,tennis
-sunny,72,95,FALSE,hike
-sunny,69,70,FALSE,tennis
 rainy,75,80,FALSE,xbox
 overcast,72,90,TRUE,tennis
 overcast,81,75,FALSE,tennis

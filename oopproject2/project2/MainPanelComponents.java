@@ -162,39 +162,7 @@ public class MainPanelComponents extends JPanel{
 
 
 		//----------------------------------------------------
-		//DECORATIVE PANELS (Just used to add visual dividers between buttons, sections, etc. Not actually planning on adding any additional
-		//functionality to these...
-		JPanel decorativePanel_1 = new JPanel();
-		decorativePanel_1.setBackground(Color.DARK_GRAY);
-		decorativePanel_1.setBounds(276, 333, 3, 75);
-		//add(decorativePanel_1);
-
-		JPanel decorativePanel_2 = new JPanel();
-		decorativePanel_2.setBackground(Color.DARK_GRAY);
-		decorativePanel_2.setBounds(289, 369, 140, 3);
-		//add(decorativePanel_2);
-
-		JPanel decorativePanel_3 = new JPanel();
-		decorativePanel_3.setBackground(Color.DARK_GRAY);
-		decorativePanel_3.setBounds(289, 75, 140, 3);
-		//add(decorativePanel_3);
-
-		JPanel decorativePanel_4 = new JPanel();
-		decorativePanel_4.setBackground(Color.DARK_GRAY);
-		decorativePanel_4.setBounds(125, 333, 3, 75);
-		//add(decorativePanel_4);
-
-		JPanel decorativePanel_5 = new JPanel();
-		decorativePanel_5.setBackground(Color.DARK_GRAY);
-		decorativePanel_5.setBounds(194, 333, 3, 75);
-		//add(decorativePanel_5);
-
-		JPanel decorativePanel_6 = new JPanel();
-		decorativePanel_6.setBackground(Color.DARK_GRAY);
-		decorativePanel_6.setBounds(10, 293, 435, 10);
-		//add(decorativePanel_6);
-
-		JFrame activityFrame = new JFrame("Select Activity");
+		
 
 
 		//BUTTONS AND EVENT HANDLERS
