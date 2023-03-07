@@ -1,3 +1,5 @@
+//Aidan Robertson
+//OOP Project 1
 package project2;
 import java.awt.Color;
 import java.awt.Dimension;
