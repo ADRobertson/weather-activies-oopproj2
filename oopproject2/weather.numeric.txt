@@ -1,4 +1,3 @@
-overcast,72,90,TRUE,class
 overcast,81,75,FALSE,sleep in
 sunny,90,88,FALSE,swim
 overcast,80,80,FALSE,tennis
