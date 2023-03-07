@@ -4,6 +4,12 @@ rainy,75,80,FALSE,xbox
 overcast,72,90,TRUE,tennis
 overcast,81,75,FALSE,tennis
 rainy,71,91,TRUE,xbox
+sunny,90,88,FALSE,swim
 rainy,65,90,TRUE,xbox
 overcast,80,80,FALSE,tennis
 rainy,60,60,TRUE,xbox
+overcast,90,85,FALSE,tennis
+overcast,80,75,FALSE,tennis
+rainy,50,30,TRUE,xbox
+sunny,95,80,FALSE,swim
+overcast,95,80,TRUE,fly kite
